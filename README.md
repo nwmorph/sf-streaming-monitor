@@ -2,9 +2,7 @@
 
 A Visual Studio Code extension for subscribing to — and publishing on — Salesforce Streaming API channels in real time, directly from your editor. Built on the [Salesforce Pub/Sub API](https://developer.salesforce.com/docs/platform/pub-sub-api/overview) (gRPC).
 
-[![Latest Release](https://img.shields.io/github/v/release/nwmorph/sf-streaming-monitor?label=Download%20latest%20.vsix&style=for-the-badge)](https://github.com/nwmorph/sf-streaming-monitor/releases/latest)
-
-> **Quick install:** Click the badge above → expand **Assets** → download `sf-streaming-monitor-x.x.x.vsix` → in VS Code: `Cmd+Shift+P` → **Extensions: Install from VSIX…**
+> **Quick install:** [Download latest .vsix](https://github.com/nwmorph/sf-streaming-monitor/releases/latest) → expand **Assets** → download `sf-streaming-monitor-x.x.x.vsix` → in VS Code: `Cmd+Shift+P` → **Extensions: Install from VSIX…**
 
 ---
 
