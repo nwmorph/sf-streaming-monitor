@@ -181,6 +181,16 @@ Changes to `media/main.js` and `media/main.css` take effect after reloading the 
 
 ---
 
+## Credits
+
+Created by **[Nicklas Waller](https://github.com/nwmorph)** — product owner, architect, and domain expert who conceived the extension and directed its development against real Salesforce orgs.
+
+Source code written with the assistance of [Claude](https://claude.ai) (Anthropic) acting as a coding agent under Nicklas's direction.
+
+See [CREDITS.md](CREDITS.md) for full details.
+
+---
+
 ## License
 
 MIT
