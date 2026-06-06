@@ -2,6 +2,10 @@
 
 A Visual Studio Code extension for subscribing to — and publishing on — Salesforce Streaming API channels in real time, directly from your editor. Built on the [Salesforce Pub/Sub API](https://developer.salesforce.com/docs/platform/pub-sub-api/overview) (gRPC).
 
+[![Latest Release](https://img.shields.io/github/v/release/nwmorph/sf-streaming-monitor?label=Download%20latest%20.vsix&style=for-the-badge)](https://github.com/nwmorph/sf-streaming-monitor/releases/latest)
+
+> **Quick install:** Click the badge above → expand **Assets** → download `sf-streaming-monitor-x.x.x.vsix` → in VS Code: `Cmd+Shift+P` → **Extensions: Install from VSIX…**
+
 ---
 
 ## Features
@@ -37,16 +41,16 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 
 ### Option A — Install the `.vsix` package (recommended for colleagues)
 
-1. Go to the [**Releases** page](https://github.com/nwmorph/sf-streaming-monitor/releases) on GitHub
-2. Click the latest release (e.g. **v0.1.0**)
-3. Under **Assets**, click `sf-streaming-monitor-0.1.0.vsix` to download it
-4. Open **VS Code**
-5. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows)
-6. Type and run **Extensions: Install from VSIX…**
-7. Select the downloaded `.vsix` file
-8. Click **Reload** when prompted
+1. Go to the [**latest release**](https://github.com/nwmorph/sf-streaming-monitor/releases/latest) on GitHub
+   — always use the latest release, it has the most recent fixes
+2. Scroll down to **Assets** and click `sf-streaming-monitor-x.x.x.vsix` to download it
+3. Open **VS Code**
+4. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows)
+5. Type and run **Extensions: Install from VSIX…**
+6. Select the downloaded `.vsix` file
+7. Click **Reload** when prompted
 
-> No Node.js, no build tools — just VS Code and the file.
+> No Node.js, no build tools — just VS Code and the `.vsix` file.
 
 ### Option B — Build from source
 
