@@ -2,7 +2,7 @@
   "name": "sf-streaming-monitor",
   "displayName": "Salesforce Streaming Monitor",
   "description": "Subscribe to and publish on Salesforce Streaming API channels — Platform Events, Change Data Capture, and Generic Streaming — directly from VS Code. Built on the Pub/Sub gRPC API.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "tetrapak",
   "license": "MIT",
   "repository": {
@@ -57,6 +57,7 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.1",
     "typescript": "^5.3.0"
   },
   "dependencies": {
