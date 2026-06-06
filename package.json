@@ -34,11 +34,11 @@
     "commands": [
       {
         "command": "sfStreaming.openMonitor",
-        "title": "Salesforce: Open Streaming Monitor"
+        "title": "SF Monitor: Open Streaming Monitor"
       },
       {
         "command": "sfStreaming.selectOrg",
-        "title": "Salesforce: Streaming Monitor — Select Org"
+        "title": "SF Monitor: Select Org"
       }
     ],
     "menus": {
