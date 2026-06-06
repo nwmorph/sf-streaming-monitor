@@ -2,13 +2,13 @@
 
 ## Author
 
-**Nicklas Waller** ([@nwmorph](https://github.com/nwmorph))
+**Niklas Waller** ([@nwmorph](https://github.com/nwmorph))
 Product owner, architect, and domain expert.
 Conceived the extension, defined every feature, directed the implementation, and validated the result against real Salesforce orgs.
 
 ## AI Assistance
 
-The source code was written with the assistance of **Claude** (Anthropic) acting as a coding agent under Nicklas's direction. All design decisions, feature requirements, and quality judgements were made by the human author.
+The source code was written with the assistance of **Claude** (Anthropic) acting as a coding agent under Niklas's direction. All design decisions, feature requirements, and quality judgements were made by the human author.
 
 This reflects an emerging and honest way to credit AI-assisted work: the human drives, the AI codes.
 
