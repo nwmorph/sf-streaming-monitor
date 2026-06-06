@@ -2,6 +2,14 @@
 
 All notable changes to SF Streaming Monitor are documented here.
 
+## [0.1.2] — 2026-06-06
+
+### Fixed
+- Session expired errors now prompt to re-authenticate directly from the extension, opening an integrated terminal with `sf org login web` pre-filled
+
+### Added
+- Author credit (Niklas Waller) in package.json, README, and CREDITS.md
+
 ## [0.1.1] — 2026-06-06
 
 ### Fixed

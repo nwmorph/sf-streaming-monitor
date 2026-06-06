@@ -2,7 +2,7 @@
   "name": "sf-streaming-monitor",
   "displayName": "Salesforce Streaming Monitor",
   "description": "Subscribe to and publish on Salesforce Streaming API channels — Platform Events, Change Data Capture, and Generic Streaming — directly from VS Code. Built on the Pub/Sub gRPC API.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "tetrapak",
   "author": {
     "name": "Niklas Waller",
