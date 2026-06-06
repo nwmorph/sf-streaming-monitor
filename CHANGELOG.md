@@ -2,20 +2,7 @@
 
 All notable changes to SF Streaming Monitor are documented here.
 
-## [0.1.2] — 2026-06-06
-
-### Fixed
-- Session expired errors now prompt to re-authenticate directly from the extension, opening an integrated terminal with `sf org login web` pre-filled
-
-### Added
-- Author credit (Niklas Waller) in package.json, README, and CREDITS.md
-
-## [0.1.1] — 2026-06-06
-
-### Fixed
-- Packaged runtime dependencies (`@grpc/grpc-js`, `avsc`, `@salesforce/core`) inside the `.vsix` so the extension works on machines without a local Node.js install
-
-## [0.1.0] — 2026-06-05
+## [0.1.0] — 2026-06-06
 
 ### Added
 - Subscribe to Salesforce Platform Events, CDC, and Generic Streaming channels via the Pub/Sub gRPC API
@@ -30,3 +17,5 @@ All notable changes to SF Streaming Monitor are documented here.
 - Replay control: New only (−1) or All retained (−2)
 - Diagnostic Output channel logging all gRPC lifecycle events
 - Date fields formatted as ISO strings instead of raw Unix timestamps
+- Session expired errors prompt to re-authenticate directly from the extension
+- Author credit: Niklas Waller
