@@ -1,9 +1,9 @@
 {
   "name": "sf-streaming-monitor",
   "displayName": "Salesforce Streaming Monitor",
-  "description": "Subscribe to and publish on Salesforce Streaming API channels — Platform Events, Change Data Capture, and Generic Streaming — directly from VS Code. Built on the Pub/Sub gRPC API.",
+  "description": "Subscribe to and publish on streaming API channels — Platform Events, Change Data Capture, and Generic Streaming — directly from VS Code. Built on the Pub/Sub gRPC API.",
   "version": "0.1.0",
-  "publisher": "tetrapak",
+  "publisher": "nwmorph",
   "author": {
     "name": "Niklas Waller",
     "url": "https://github.com/nwmorph"
@@ -34,11 +34,11 @@
     "commands": [
       {
         "command": "sfStreaming.openMonitor",
-        "title": "SF Monitor: Open Streaming Monitor"
+        "title": "Streaming Monitor: Open"
       },
       {
         "command": "sfStreaming.selectOrg",
-        "title": "SF Monitor: Select Org"
+        "title": "Streaming Monitor: Select Org"
       }
     ],
     "menus": {
