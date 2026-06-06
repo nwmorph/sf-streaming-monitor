@@ -5,6 +5,10 @@
   "version": "0.1.0",
   "publisher": "tetrapak",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/sf-streaming-monitor.git"
+  },
   "keywords": [
     "salesforce",
     "platform events",
