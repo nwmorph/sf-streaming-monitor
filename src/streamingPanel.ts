@@ -173,7 +173,7 @@ export class StreamingMonitorPanel {
     if (action === "Re-authenticate") {
       const terminal = vscode.window.createTerminal("Salesforce Login");
       terminal.show();
-      terminal.sendText(`sf org login web --target-org "${username}"`);
+      terminal.sendText(`sf org login web --alias "${username}" || sfdx auth:web:login --setalias "${username}"`);
       // After auth completes, prompt the user to re-select the org so the
       // panel picks up the fresh token.
       const retry = await vscode.window.showInformationMessage(
