@@ -175,6 +175,7 @@ Changes to `media/main.js` and `media/main.css` take effect after reloading the 
 |---|---|---|
 | "Connected — 0 events" | `replay_preset=0` (LATEST) with no recent events | Switch Replay to *All retained (−2)* |
 | "Connected — 0 events" after replay change | Corporate proxy blocking port 7443 | Check Output channel for stream errors; raise with network team |
+| `ECONNRESET` / `14 UNAVAILABLE: No connection established` | Port 7443 blocked by VDI or corporate firewall | IT must allow outbound TCP to `api.pubsub.salesforce.com:7443`. Test with: `curl -v --max-time 10 https://api.pubsub.salesforce.com:7443` |
 | `invalid "long": undefined` on publish | Schema has required fields not in payload | Use the auto-generated template; it fills all required fields |
 | `Not subscribed to /event/...` | Platform Event not visible to this user | Check field-level security and platform event settings in Setup |
 | Org not appearing in picker | Not authenticated | Run `sf org login web --alias myAlias` |
