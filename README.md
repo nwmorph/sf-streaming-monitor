@@ -35,14 +35,18 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 
 ## Installation
 
-### Option A — Install the `.vsix` package (recommended for distribution)
+### Option A — Install the `.vsix` package (recommended for colleagues)
 
-1. Download or copy `sf-streaming-monitor-<version>.vsix` to your machine
-2. Open VS Code
-3. Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
-4. Run **Extensions: Install from VSIX…**
-5. Select the `.vsix` file
-6. Reload VS Code when prompted
+1. Go to the [**Releases** page](https://github.com/nwmorph/sf-streaming-monitor/releases) on GitHub
+2. Click the latest release (e.g. **v0.1.0**)
+3. Under **Assets**, click `sf-streaming-monitor-0.1.0.vsix` to download it
+4. Open **VS Code**
+5. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows)
+6. Type and run **Extensions: Install from VSIX…**
+7. Select the downloaded `.vsix` file
+8. Click **Reload** when prompted
+
+> No Node.js, no build tools — just VS Code and the file.
 
 ### Option B — Build from source
 
