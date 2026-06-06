@@ -159,6 +159,38 @@ export class StreamingMonitorPanel {
     );
   }
 
+  private isSessionError(err: unknown): boolean {
+    const msg = String(err).toUpperCase();
+    return msg.includes("INVALID_SESSION_ID") || msg.includes("EXPIRED_ACCESS") || msg.includes("AUTHENTICATION_FAILURE");
+  }
+
+  private async promptReauth(username: string): Promise<void> {
+    const action = await vscode.window.showErrorMessage(
+      `Session expired for ${username}. Re-authenticate to continue.`,
+      "Re-authenticate",
+      "Cancel"
+    );
+    if (action === "Re-authenticate") {
+      const terminal = vscode.window.createTerminal("Salesforce Login");
+      terminal.show();
+      terminal.sendText(`sf org login web --target-org "${username}"`);
+      // After auth completes, prompt the user to re-select the org so the
+      // panel picks up the fresh token.
+      const retry = await vscode.window.showInformationMessage(
+        "Once login completes in the browser, click Refresh to reconnect.",
+        "Refresh"
+      );
+      if (retry === "Refresh") {
+        try {
+          const org = await getOrgAccessInfo(username);
+          this.setOrg(org);
+        } catch (e) {
+          vscode.window.showErrorMessage(`Still could not connect: ${String(e)}`);
+        }
+      }
+    }
+  }
+
   private async sendDiscoveredChannels(): Promise<void> {
     if (!this.currentOrg) {
       vscode.window.showWarningMessage("Select an org first.");
@@ -172,10 +204,15 @@ export class StreamingMonitorPanel {
       );
       this.panel.webview.postMessage({ type: "channelsDiscovered", channels });
     } catch (err) {
-      this.panel.webview.postMessage({
-        type: "error",
-        message: `Channel discovery failed: ${String(err)}`,
-      });
+      if (this.isSessionError(err)) {
+        this.panel.webview.postMessage({ type: "channelsDiscovered", channels: [] });
+        await this.promptReauth(this.currentOrg.username);
+      } else {
+        this.panel.webview.postMessage({
+          type: "error",
+          message: `Channel discovery failed: ${String(err)}`,
+        });
+      }
     }
   }
 
@@ -226,7 +263,12 @@ export class StreamingMonitorPanel {
     });
 
     this.client.on("error", (err: string) => {
-      this.panel.webview.postMessage({ type: "error", message: err });
+      if (this.isSessionError(err) && this.currentOrg) {
+        this.panel.webview.postMessage({ type: "error", message: err });
+        void this.promptReauth(this.currentOrg.username);
+      } else {
+        this.panel.webview.postMessage({ type: "error", message: err });
+      }
     });
 
     try {
@@ -286,6 +328,9 @@ export class StreamingMonitorPanel {
       this.panel.webview.postMessage({ type: "publishResult", ok: true, replayId: result.replayId });
     } catch (err) {
       this.panel.webview.postMessage({ type: "publishResult", ok: false, error: String(err) });
+      if (this.isSessionError(err)) {
+        await this.promptReauth(this.currentOrg.username);
+      }
     }
   }
 
