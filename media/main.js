@@ -25,8 +25,10 @@
   const btnAddChannel   = document.getElementById("btn-add-channel");
   const replaySelect    = document.getElementById("replay-select");
   const btnSubscribe    = document.getElementById("btn-subscribe");
+  const btnReconnect    = document.getElementById("btn-reconnect");
   const btnUnsubscribe  = document.getElementById("btn-unsubscribe");
   const btnClear        = document.getElementById("btn-clear");
+  const btnReset        = document.getElementById("btn-reset");
   const orgLabel        = document.getElementById("org-label");
   const channelChips    = document.getElementById("channel-chips");
   const statusDot       = document.getElementById("status-dot");
@@ -101,6 +103,18 @@
     eventCount = 0;
     updateEventCount();
     hideTooltip();
+  });
+
+  btnReset.addEventListener("click", () => {
+    vscode.postMessage({ type: "reset" });
+  });
+
+  btnReconnect.addEventListener("click", () => {
+    if (subscribedChannels.length === 0) return;
+    vscode.postMessage({ type: "subscribe", channels: subscribedChannels });
+    setStatus("connecting");
+    btnReconnect.classList.add("hidden");
+    btnUnsubscribe.disabled = false;
   });
 
   discoverSearch.addEventListener("input", renderDiscoverList);
@@ -252,15 +266,42 @@
         setStatus("connected");
         btnSubscribe.disabled = true;
         btnUnsubscribe.disabled = false;
+        btnReconnect.classList.add("hidden");
         startTlRefreshTimer();
         break;
 
       case "unsubscribed":
         isSubscribed = false;
-        setStatus("idle");
         btnUnsubscribe.disabled = true;
+        stopTlRefreshTimer();
+        // If we have channels from a previous subscription, offer Reconnect
+        // rather than forcing the user to re-add channels and re-subscribe
+        if (subscribedChannels.length > 0) {
+          setStatus("idle");
+          btnReconnect.classList.remove("hidden");
+        } else {
+          setStatus("idle");
+        }
+        updateSubscribeBtn();
+        break;
+
+      case "reset":
+        isSubscribed = false;
+        subscribedChannels = [];
+        pendingChannels = [];
+        allEvents = [];
+        eventCount = 0;
+        updateEventCount();
+        eventLog.innerHTML = "";
+        timelineDots.innerHTML = "";
+        timelineAxis.innerHTML = "";
+        renderChips();
+        btnUnsubscribe.disabled = true;
+        btnReconnect.classList.add("hidden");
+        setStatus("idle");
         updateSubscribeBtn();
         stopTlRefreshTimer();
+        hideTooltip();
         break;
 
       case "event":

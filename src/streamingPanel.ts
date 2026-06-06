@@ -18,6 +18,7 @@ type WebviewMessage =
   | { type: "getSchemaTemplate"; channel: string }
   | { type: "selectOrg" }
   | { type: "clearLog" }
+  | { type: "reset" }
   | { type: "publish"; channel: string; payload: Record<string, unknown> };
 
 export class StreamingMonitorPanel {
@@ -99,6 +100,10 @@ export class StreamingMonitorPanel {
         break;
       case "clearLog":
         // handled entirely by webview JS
+        break;
+      case "reset":
+        this.unsubscribe();
+        this.panel.webview.postMessage({ type: "reset" });
         break;
       case "discoverPublishableChannels":
         await this.sendPublishableChannels();
@@ -400,8 +405,10 @@ export class StreamingMonitorPanel {
       </div>
       <div id="action-section">
         <button id="btn-subscribe" class="btn btn-success" disabled>Subscribe</button>
+        <button id="btn-reconnect" class="btn btn-warning hidden">Reconnect</button>
         <button id="btn-unsubscribe" class="btn btn-danger" disabled>Unsubscribe</button>
         <button id="btn-clear" class="btn">Clear</button>
+        <button id="btn-reset" class="btn">Reset</button>
         <button id="btn-publish-open" class="btn" disabled>Publish Event</button>
       </div>
     </div>

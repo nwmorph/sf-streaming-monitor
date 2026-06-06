@@ -105,8 +105,9 @@ select:disabled { opacity: 0.5; }
 .btn:hover:not(:disabled) { background: var(--btn-hover); }
 .btn:disabled { opacity: 0.45; cursor: default; }
 .btn-primary { background: var(--accent); }
-.btn-success { background: var(--success); color: #000; }
-.btn-danger  { background: var(--danger);  color: #fff; }
+.btn-success  { background: var(--success); color: #000; }
+.btn-danger   { background: var(--danger);  color: #fff; }
+.btn-warning  { background: #e3a008; color: #000; }
 .btn-icon {
   background: none;
   border: none;
