@@ -48,7 +48,7 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/sf-streaming-monitor.git
+git clone https://github.com/nwmorph/sf-streaming-monitor.git
 cd sf-streaming-monitor
 
 # 2. Install dependencies
