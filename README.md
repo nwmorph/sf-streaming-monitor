@@ -31,7 +31,9 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 | Node.js | 18 or later (used at extension build time only) |
 | Network | Outbound access to `api.pubsub.salesforce.com:7443` (gRPC / HTTP/2) |
 
-> **Corporate proxy note:** The Pub/Sub API uses a long-lived HTTP/2 stream on port 7443. Some corporate proxies allow HTTPS (443) but silently drop this connection. If you see "Connected — 0 events", check with your network team.
+> **Corporate proxy / VDI note:** The Pub/Sub API uses gRPC over HTTP/2 on port 7443. Corporate proxies that perform SSL/TLS inspection or that only allow HTTP/1.1 will reset the connection before it completes. Symptoms: `ECONNRESET`, `14 UNAVAILABLE: No connection established`, or "Connected — 0 events".
+>
+> **IT ticket wording:** *"Please whitelist `api.pubsub.salesforce.com:7443` (TCP) for outbound access and exempt it from SSL inspection. This is a Salesforce Pub/Sub gRPC endpoint that requires HTTP/2. Reference: https://developer.salesforce.com/docs/platform/pub-sub-api/overview"*
 
 ---
 
