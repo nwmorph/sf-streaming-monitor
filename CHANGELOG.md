@@ -2,6 +2,11 @@
 
 All notable changes to SF Streaming Monitor are documented here.
 
+## [0.1.1] — 2026-06-06
+
+### Fixed
+- Packaged runtime dependencies (`@grpc/grpc-js`, `avsc`, `@salesforce/core`) inside the `.vsix` so the extension works on machines without a local Node.js install
+
 ## [0.1.0] — 2026-06-05
 
 ### Added
