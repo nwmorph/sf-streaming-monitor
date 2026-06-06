@@ -1,0 +1,64 @@
+{
+  "name": "sf-streaming-monitor",
+  "displayName": "Salesforce Streaming Monitor",
+  "description": "Subscribe to and publish on Salesforce Streaming API channels — Platform Events, Change Data Capture, and Generic Streaming — directly from VS Code. Built on the Pub/Sub gRPC API.",
+  "version": "0.1.0",
+  "publisher": "tetrapak",
+  "license": "MIT",
+  "keywords": [
+    "salesforce",
+    "platform events",
+    "streaming",
+    "cdc",
+    "change data capture",
+    "pub/sub",
+    "sfdx"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sfStreaming.openMonitor",
+        "title": "Salesforce: Open Streaming Monitor"
+      },
+      {
+        "command": "sfStreaming.selectOrg",
+        "title": "Salesforce: Streaming Monitor — Select Org"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "sfStreaming.openMonitor"
+        },
+        {
+          "command": "sfStreaming.selectOrg"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.4",
+    "@grpc/proto-loader": "^0.8.1",
+    "@salesforce/core": "^8.31.0",
+    "avsc": "^5.7.9"
+  }
+}
