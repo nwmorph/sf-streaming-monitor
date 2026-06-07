@@ -410,8 +410,8 @@ export class StreamingMonitorPanel {
       <button id="btn-subscribe" class="btn btn-success" disabled>Subscribe</button>
       <button id="btn-reconnect" class="btn btn-warning hidden">Reconnect</button>
       <button id="btn-unsubscribe" class="btn btn-danger" disabled>Unsubscribe</button>
-      <button id="btn-clear" class="btn">Clear</button>
-      <button id="btn-reset" class="btn">Reset</button>
+      <button id="btn-clear" class="btn" title="Clear all events from the log and timeline">Clear Events</button>
+      <button id="btn-reset" class="btn" title="Disconnect, clear all channels and events, and start fresh">Reset All</button>
       <button id="btn-publish-open" class="btn" disabled>Publish Event</button>
     </div>
 
