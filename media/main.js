@@ -29,6 +29,9 @@
   const btnUnsubscribe  = document.getElementById("btn-unsubscribe");
   const btnClear        = document.getElementById("btn-clear");
   const btnReset        = document.getElementById("btn-reset");
+  const inlineBanner    = document.getElementById("inline-banner");
+  const inlineBannerText = document.getElementById("inline-banner-text");
+  const inlineBannerDismiss = document.getElementById("inline-banner-dismiss");
   const orgLabel        = document.getElementById("org-label");
   const channelChips    = document.getElementById("channel-chips");
   const statusDot       = document.getElementById("status-dot");
@@ -115,7 +118,10 @@
     setStatus("connecting");
     btnReconnect.classList.add("hidden");
     btnUnsubscribe.disabled = false;
+    hideBanner();
   });
+
+  inlineBannerDismiss.addEventListener("click", hideBanner);
 
   discoverSearch.addEventListener("input", renderDiscoverList);
 
@@ -198,6 +204,17 @@
     publishPayload.value = JSON.stringify(obj, null, 2);
   }
 
+  function showBanner(type, msg) {
+    inlineBannerText.textContent = msg;
+    inlineBanner.className = `banner-${type}`;
+    inlineBanner.classList.remove("hidden");
+  }
+
+  function hideBanner() {
+    inlineBanner.classList.add("hidden");
+    inlineBannerText.textContent = "";
+  }
+
   function setPublishStatus(type, msg) {
     publishStatus.textContent = msg;
     publishStatus.className = `publish-status-${type}`;
@@ -267,6 +284,7 @@
         btnSubscribe.disabled = true;
         btnUnsubscribe.disabled = false;
         btnReconnect.classList.add("hidden");
+        hideBanner();
         startTlRefreshTimer();
         break;
 
@@ -302,6 +320,7 @@
         updateSubscribeBtn();
         stopTlRefreshTimer();
         hideTooltip();
+        hideBanner();
         break;
 
       case "event":
@@ -352,7 +371,17 @@
         break;
 
       case "error":
+        // If we were connected and the stream dropped, reset subscribe state
+        // so the user can re-subscribe or reconnect
+        if (isSubscribed) {
+          isSubscribed = false;
+          btnUnsubscribe.disabled = true;
+          btnReconnect.classList.remove("hidden");
+          updateSubscribeBtn();
+          stopTlRefreshTimer();
+        }
         setStatus("error", msg.message);
+        showBanner("error", msg.message);
         break;
     }
   });

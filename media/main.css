@@ -119,6 +119,46 @@ select:disabled { opacity: 0.5; }
 }
 .btn-icon:hover { opacity: 1; }
 
+/* ── Action bar (row 2) ── */
+#action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--event-bg);
+  flex-shrink: 0;
+}
+
+/* ── Inline notification banner ── */
+#inline-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+#inline-banner.hidden { display: none; }
+#inline-banner-text { flex: 1; }
+
+.banner-error {
+  background: rgba(248, 81, 73, 0.15);
+  border-bottom: 1px solid rgba(248, 81, 73, 0.4);
+  color: #f85149;
+}
+.banner-warning {
+  background: rgba(227, 160, 8, 0.15);
+  border-bottom: 1px solid rgba(227, 160, 8, 0.4);
+  color: #e3a008;
+}
+.banner-info {
+  background: rgba(0, 122, 204, 0.12);
+  border-bottom: 1px solid rgba(0, 122, 204, 0.3);
+  color: var(--accent);
+}
+
 /* ── Channel chips ── */
 #channel-list-container {
   display: flex;

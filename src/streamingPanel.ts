@@ -383,7 +383,7 @@ export class StreamingMonitorPanel {
 </head>
 <body>
   <div id="app">
-    <!-- Toolbar -->
+    <!-- Toolbar row 1: org + channel input -->
     <div id="toolbar">
       <div id="org-section">
         <button id="btn-select-org" class="btn btn-primary">Select Org</button>
@@ -403,14 +403,22 @@ export class StreamingMonitorPanel {
           <option value="-2">All retained (−2)</option>
         </select>
       </div>
-      <div id="action-section">
-        <button id="btn-subscribe" class="btn btn-success" disabled>Subscribe</button>
-        <button id="btn-reconnect" class="btn btn-warning hidden">Reconnect</button>
-        <button id="btn-unsubscribe" class="btn btn-danger" disabled>Unsubscribe</button>
-        <button id="btn-clear" class="btn">Clear</button>
-        <button id="btn-reset" class="btn">Reset</button>
-        <button id="btn-publish-open" class="btn" disabled>Publish Event</button>
-      </div>
+    </div>
+
+    <!-- Toolbar row 2: actions -->
+    <div id="action-bar">
+      <button id="btn-subscribe" class="btn btn-success" disabled>Subscribe</button>
+      <button id="btn-reconnect" class="btn btn-warning hidden">Reconnect</button>
+      <button id="btn-unsubscribe" class="btn btn-danger" disabled>Unsubscribe</button>
+      <button id="btn-clear" class="btn">Clear</button>
+      <button id="btn-reset" class="btn">Reset</button>
+      <button id="btn-publish-open" class="btn" disabled>Publish Event</button>
+    </div>
+
+    <!-- Inline notification banner -->
+    <div id="inline-banner" class="hidden">
+      <span id="inline-banner-text"></span>
+      <button id="inline-banner-dismiss" class="btn-icon">✕</button>
     </div>
 
     <!-- Channel list -->
