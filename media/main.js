@@ -254,6 +254,7 @@
   // Hide tooltip on outside click
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".tl-dot") && !e.target.closest("#tl-tooltip")) {
+      cancelHideTooltip();
       hideTooltip();
     }
   });
@@ -542,6 +543,15 @@
         }
       });
 
+      dot.addEventListener("mouseenter", () => {
+        cancelHideTooltip();
+        showTooltip(cluster.entries, dot);
+      });
+
+      dot.addEventListener("mouseleave", () => {
+        scheduleHideTooltip();
+      });
+
       timelineDots.appendChild(dot);
     });
 
@@ -669,6 +679,10 @@
 
     tlTooltip.classList.remove("hidden");
     positionTooltip(dotEl);
+
+    // Keep tooltip open when mouse moves into it from the dot
+    tlTooltip.onmouseenter = () => cancelHideTooltip();
+    tlTooltip.onmouseleave = () => scheduleHideTooltip();
   }
 
   function positionTooltip(dotEl) {
@@ -688,7 +702,18 @@
     tlTooltip.style.top  = `${top}px`;
   }
 
+  let hideTooltipTimer = null;
+
+  function scheduleHideTooltip() {
+    hideTooltipTimer = setTimeout(() => hideTooltip(), 300);
+  }
+
+  function cancelHideTooltip() {
+    if (hideTooltipTimer) { clearTimeout(hideTooltipTimer); hideTooltipTimer = null; }
+  }
+
   function hideTooltip() {
+    cancelHideTooltip();
     tlTooltip.classList.add("hidden");
     tlTooltip.innerHTML = "";
     document.querySelectorAll(".tl-dot-active").forEach((d) => d.classList.remove("tl-dot-active"));
