@@ -6,8 +6,8 @@ import * as https from "https";
 import * as avro from "avsc";
 
 export interface StreamingMessage {
-  channel: string;         // topic name e.g. /event/Foo__e
-  replayId: string;        // base64-encoded bytes
+  channel: string;
+  replayId: string;
   schemaId: string;
   eventId: string;         // ProducerEvent id / UUID
   payload: unknown;        // decoded Avro record as plain object
