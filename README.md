@@ -27,9 +27,10 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 | Requirement | Details |
 |---|---|
 | VS Code | 1.85 or later |
-| Salesforce CLI | `sf` (v2) installed and at least one org authenticated via `sf org login` |
-| Node.js | 18 or later (used at extension build time only) |
+| Salesforce CLI | `sf` (v2) — install from [developer.salesforce.com/tools/salesforcecli](https://developer.salesforce.com/tools/salesforcecli) |
 | Network | Outbound access to `api.pubsub.salesforce.com:7443` (gRPC / HTTP/2) |
+
+> **Node.js is not required to run the extension.** All dependencies are bundled inside the `.vsix`. Node.js is only needed if you want to [build from source](#option-b--build-from-source).
 
 > **Corporate proxy / VDI note:** The Pub/Sub API uses gRPC over HTTP/2 on port 7443. Corporate proxies that perform SSL/TLS inspection or that only allow HTTP/1.1 will reset the connection before it completes. Symptoms: `ECONNRESET`, `14 UNAVAILABLE: No connection established`, or "Connected — 0 events".
 >
@@ -39,72 +40,72 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 
 ## Installation
 
-### Option A — Install the `.vsix` package (recommended for colleagues)
+### Option A — Install the `.vsix` package (recommended)
 
-1. Go to the [**latest release**](https://github.com/nwmorph/sf-streaming-monitor/releases/latest) on GitHub
-   — always use the latest release, it has the most recent fixes
-2. Scroll down to **Assets** and click `sf-streaming-monitor-x.x.x.vsix` to download it
-3. Open **VS Code**
-4. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows)
-5. Type and run **Extensions: Install from VSIX…**
-6. Select the downloaded `.vsix` file
-7. Click **Reload** when prompted
+1. Go to the [**latest release**](https://github.com/nwmorph/sf-streaming-monitor/releases/latest) on GitHub and download `sf-streaming-monitor-x.x.x.vsix`
+2. Open **VS Code**
+3. Open the Command Palette (`Cmd+Shift+P` on Mac / `Ctrl+Shift+P` on Windows)
+4. Type and run **Extensions: Install from VSIX…**
+5. Select the downloaded `.vsix` file and click **Reload** when prompted
 
-> No Node.js, no build tools — just VS Code and the `.vsix` file.
+> No Node.js, no build tools — just VS Code and the Salesforce CLI.
 
 ### Option B — Build from source
 
+Requires **Node.js 18+**.
+
 ```bash
-# 1. Clone the repository
 git clone https://github.com/nwmorph/sf-streaming-monitor.git
 cd sf-streaming-monitor
-
-# 2. Install dependencies
-npm install
-
-# 3. Compile TypeScript
-npm run compile
-
-# 4. Package into a .vsix (requires vsce)
-npm install -g @vscode/vsce
-vsce package
-
-# 5. Install the generated .vsix (see Option A, step 2–6)
-```
-
----
-
-## Building the `.vsix` for distribution
-
-```bash
 npm install
 npm run compile
-npx @vscode/vsce package
-# → sf-streaming-monitor-0.1.0.vsix
+npx @vscode/vsce package --no-dependencies --skip-license
+# → sf-streaming-monitor-x.x.x.vsix  (install as in Option A)
 ```
-
-Send the `.vsix` file to colleagues — they only need VS Code to install it (no Node.js required at runtime).
 
 ---
 
 ## Getting Started
 
-1. **Authenticate your org** (if not already done):
-   ```bash
-   sf org login web --alias myOrg
-   ```
+### Step 1 — Authenticate your Salesforce org
 
-2. Open the Command Palette and run **Salesforce: Open Streaming Monitor**
+If you haven't already, log in with the Salesforce CLI:
 
-3. Click **Select Org** and choose your org from the picker
+```bash
+sf org login web --alias myOrg
+```
 
-4. Type a channel in the input (e.g. `/event/MyEvent__e`) and click **Add**, or use **Discover Channels** to browse
+This stores credentials in `~/.sfdx/` where the extension can find them. You only need to do this once per org.
 
-5. Choose a **Replay** option:
-   - *New only (−1)* — receive only events published after you subscribe
-   - *All retained (−2)* — replay all events still in the event bus (up to 72 hours)
+### Step 2 — Open the extension
 
-6. Click **Subscribe**
+Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and run:
+
+```
+SF Streaming Monitor: Open
+```
+
+### Step 3 — Select your org
+
+Click **Select Org** in the toolbar and choose the org from the dropdown. If you're working inside a Salesforce DX project folder, the default org is selected automatically.
+
+### Step 4 — Add a channel
+
+Type a channel name in the input box and click **Add**, for example:
+- `/event/MyPlatformEvent__e` — Platform Event
+- `/data/AccountChangeEvent` — Change Data Capture for Account
+- `/topic/MyPushTopic` — Generic Streaming
+
+Or click **Discover Channels** to browse all Platform Events and CDC topics available in your org.
+
+### Step 5 — Choose replay mode and subscribe
+
+| Replay option | What it does |
+|---|---|
+| New only (−1) | Receive only events published after you click Subscribe |
+| All retained (−2) | Replay all events still in the event bus (up to 72 hours back) |
+
+Click **Subscribe** — the status dot turns green and events start appearing.
 
 ---
 
@@ -161,13 +162,27 @@ sf-streaming-monitor/
 ## Development
 
 ```bash
-# Watch mode — recompiles on every save
+# One-off build
+npm run compile
+
+# Watch mode — rebuilds on every save (esbuild incremental)
 npm run watch
 
 # Then press F5 in VS Code to launch the Extension Development Host
 ```
 
 Changes to `media/main.js` and `media/main.css` take effect after reloading the webview (close and reopen the panel) — no recompile needed for those files.
+
+### Building the `.vsix` for distribution
+
+```bash
+npm install
+npm run compile
+npx @vscode/vsce package --no-dependencies --skip-license
+# → sf-streaming-monitor-x.x.x.vsix (~220 KB)
+```
+
+The `.vsix` contains the bundled extension and the `@salesforce/core` dependency. Recipients only need VS Code — no Node.js or npm required.
 
 ---
 
