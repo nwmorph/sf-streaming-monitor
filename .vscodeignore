@@ -1,9 +1,21 @@
 .vscode/**
+.sfdx/**
+.github/**
 src/**
 *.map
 tsconfig.json
+esbuild.js
 .eslintrc.json
-node_modules/.bin/**
-node_modules/@types/**
-node_modules/typescript/**
-node_modules/@vscode/vsce/**
+# Old individual compiled files — replaced by the bundled out/extension.js
+out/streamingPanel.js
+out/streamingPanel.js.map
+out/streamingClient.js
+out/streamingClient.js.map
+out/orgManager.js
+out/orgManager.js.map
+out/extension.js.map
+# Exclude all node_modules — grpc-js, proto-loader, avsc are bundled into out/extension.js
+# @salesforce/core is kept as a runtime external (uses keytar native binary that can't be bundled)
+node_modules/**
+!node_modules/@salesforce/**
+!node_modules/keytar/**
