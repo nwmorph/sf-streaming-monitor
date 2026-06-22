@@ -22,10 +22,19 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 
 ---
 
+## Platform support
+
+> **macOS only.** The distributed `.vsix` is built on macOS and contains a native macOS binary (`keytar.node`) used for reading Salesforce CLI credentials. Installing this `.vsix` on Windows or Linux will cause authentication to fail silently.
+>
+> Windows/Linux support is planned but requires a change to how credentials are read. If you need it, please [open an issue](https://github.com/nwmorph/sf-streaming-monitor/issues).
+
+---
+
 ## Requirements
 
 | Requirement | Details |
 |---|---|
+| OS | macOS (see Platform support above) |
 | VS Code | 1.85 or later |
 | Salesforce CLI | `sf` (v2) — install from [developer.salesforce.com/tools/salesforcecli](https://developer.salesforce.com/tools/salesforcecli) |
 | Network | Outbound access to `api.pubsub.salesforce.com:7443` (gRPC / HTTP/2) |
