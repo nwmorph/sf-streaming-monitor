@@ -17,6 +17,8 @@
   let envelopeMode = "payload"; // "payload" | "full"
   let tlWindowMinutes = 0;     // 0 = all
   let tlRenderTimer = null;
+  let searchQuery = "";         // current text search
+  let channelFilterSet = new Set(); // channels to show; empty = show all
 
   // ── DOM refs ─────────────────────────────────────────────────────────────
   const btnSelectOrg    = document.getElementById("btn-select-org");
@@ -55,6 +57,11 @@
   const publishPayload       = document.getElementById("publish-payload");
   const publishStatus        = document.getElementById("publish-status");
   const btnPublishSend       = document.getElementById("btn-publish-send");
+  const eventFilterBar     = document.getElementById("event-filter-bar");
+  const eventSearch        = document.getElementById("event-search");
+  const eventChannelFilters = document.getElementById("event-channel-filters");
+  const eventFilterCount   = document.getElementById("event-filter-count");
+  const btnClearSearch     = document.getElementById("btn-clear-search");
   const timelineControls = document.getElementById("timeline-controls");
   const tlWindowBtns    = document.querySelectorAll(".tl-window-btn");
   const timelineView    = document.getElementById("timeline-view");
@@ -106,6 +113,13 @@
     eventCount = 0;
     updateEventCount();
     hideTooltip();
+    // Reset filter bar
+    searchQuery = "";
+    channelFilterSet.clear();
+    eventSearch.value = "";
+    eventFilterBar.classList.add("hidden");
+    eventChannelFilters.innerHTML = "";
+    eventFilterCount.textContent = "";
   });
 
   btnReset.addEventListener("click", () => {
@@ -251,6 +265,21 @@
     });
   });
 
+  // Search input
+  eventSearch.addEventListener("input", () => {
+    searchQuery = eventSearch.value.toLowerCase();
+    applyEventFilter();
+  });
+
+  // Clear search
+  btnClearSearch.addEventListener("click", () => {
+    eventSearch.value = "";
+    searchQuery = "";
+    channelFilterSet.clear();
+    renderChannelFilterChips();
+    applyEventFilter();
+  });
+
   // Hide tooltip on outside click
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".tl-dot") && !e.target.closest("#tl-tooltip")) {
@@ -314,6 +343,12 @@
         eventLog.innerHTML = "";
         timelineDots.innerHTML = "";
         timelineAxis.innerHTML = "";
+        searchQuery = "";
+        channelFilterSet.clear();
+        eventSearch.value = "";
+        eventFilterBar.classList.add("hidden");
+        eventChannelFilters.innerHTML = "";
+        eventFilterCount.textContent = "";
         renderChips();
         btnUnsubscribe.disabled = true;
         btnReconnect.classList.add("hidden");
@@ -387,6 +422,76 @@
     }
   });
 
+  // ── Event filter ──────────────────────────────────────────────────────────
+  function matchesFilter(entry) {
+    const { event } = entry;
+    // Channel filter
+    if (channelFilterSet.size > 0 && !channelFilterSet.has(event.channel)) return false;
+    // Text search — check channel, payload JSON, and full envelope
+    if (searchQuery) {
+      const haystack = (
+        event.channel + " " +
+        JSON.stringify(event.payload) + " " +
+        (event.replayId || "") + " " +
+        (event.eventId || "")
+      ).toLowerCase();
+      if (!haystack.includes(searchQuery)) return false;
+    }
+    return true;
+  }
+
+  function applyEventFilter() {
+    const hasFilter = searchQuery || channelFilterSet.size > 0;
+    const matched = allEvents.filter(matchesFilter);
+
+    // Update count badge
+    if (hasFilter) {
+      eventFilterCount.textContent = matched.length + " / " + allEvents.length;
+      eventFilterCount.classList.remove("hidden");
+    } else {
+      eventFilterCount.textContent = "";
+      eventFilterCount.classList.add("hidden");
+    }
+
+    if (viewMode === "list") {
+      // Show/hide existing cards
+      document.querySelectorAll(".event-card").forEach((card) => {
+        const ch = card.dataset.channel || "";
+        const body = card.querySelector(".event-body");
+        const cardText = (ch + " " + (body ? body.textContent : "")).toLowerCase();
+        const chOk = channelFilterSet.size === 0 || channelFilterSet.has(ch);
+        const qOk  = !searchQuery || cardText.includes(searchQuery);
+        card.classList.toggle("hidden", !(chOk && qOk));
+      });
+    } else {
+      renderTimeline();
+    }
+  }
+
+  function renderChannelFilterChips() {
+    eventChannelFilters.innerHTML = "";
+    // One chip per distinct channel in allEvents
+    const channels = [...new Set(allEvents.map((e) => e.event.channel))];
+    channels.forEach((ch) => {
+      const btn = document.createElement("button");
+      btn.className = "ch-filter-chip" + (channelFilterSet.has(ch) ? " active" : "");
+      btn.style.setProperty("--chip-color", colorForChannel(ch));
+      btn.textContent = ch.replace(/^\/event\/|^\/data\/|^\/topic\//, "");
+      btn.title = ch;
+      btn.addEventListener("click", () => {
+        if (channelFilterSet.has(ch)) {
+          channelFilterSet.delete(ch);
+          btn.classList.remove("active");
+        } else {
+          channelFilterSet.add(ch);
+          btn.classList.add("active");
+        }
+        applyEventFilter();
+      });
+      eventChannelFilters.appendChild(btn);
+    });
+  }
+
   // ── Core event handler ────────────────────────────────────────────────────
   function onEvent(event) {
     eventCount++;
@@ -394,8 +499,17 @@
     const ts = new Date(event.receivedAt).getTime();
     allEvents.push({ event, ts });
 
+    // Show filter bar on first event; rebuild channel chips
+    if (allEvents.length === 1) eventFilterBar.classList.remove("hidden");
+    renderChannelFilterChips();
+
     if (viewMode === "list") {
       prependListCard(event);
+      // If a filter is active, immediately hide the new card if it doesn't match
+      if (searchQuery || channelFilterSet.size > 0) {
+        const card = eventLog.firstChild;
+        if (card && !matchesFilter({ event, ts })) card.classList.add("hidden");
+      }
     } else {
       renderTimeline();
     }
@@ -422,6 +536,7 @@
     // Store both on the element so the global toggle can update them
     card.dataset.payloadJson = payloadJson;
     card.dataset.fullJson = fullJson;
+    card.dataset.channel = event.channel;
 
     const showingFull = envelopeMode === "full";
     const initialJson = showingFull ? fullJson : payloadJson;
@@ -474,7 +589,8 @@
     const now = Date.now();
     const windowMs = tlWindowMinutes > 0 ? tlWindowMinutes * 60 * 1000 : null;
     const cutoff = windowMs ? now - windowMs : null;
-    const visible = cutoff ? allEvents.filter((e) => e.ts >= cutoff) : allEvents;
+    const timeFiltered = cutoff ? allEvents.filter((e) => e.ts >= cutoff) : allEvents;
+    const visible = timeFiltered.filter(matchesFilter);
 
     timelineDots.innerHTML = "";
     timelineAxis.innerHTML = "";

@@ -490,6 +490,14 @@ export class StreamingMonitorPanel {
       </div>
     </div>
 
+    <!-- Event search / filter bar (shown once events arrive) -->
+    <div id="event-filter-bar" class="hidden">
+      <input id="event-search" type="text" placeholder="Search events…" />
+      <div id="event-channel-filters"></div>
+      <span id="event-filter-count"></span>
+      <button id="btn-clear-search" class="btn-icon" title="Clear search">✕</button>
+    </div>
+
     <!-- Timeline window filter (hidden in list mode) -->
     <div id="timeline-controls" class="hidden">
       <span class="tl-label">Window:</span>
