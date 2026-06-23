@@ -516,6 +516,21 @@
   }
 
   // ── List view ─────────────────────────────────────────────────────────────
+
+  // muted=true → show short muted label; muted=false → show full bold channel name
+  function setCardChannelStyle(card, muted) {
+    const chEl = card.querySelector(".event-channel, .event-channel-repeat");
+    if (!chEl) return;
+    const ch = card.dataset.channel || "";
+    if (muted) {
+      chEl.className = "event-channel-repeat";
+      chEl.textContent = ch.replace(/^\/event\/|^\/data\/|^\/topic\//, "");
+    } else {
+      chEl.className = "event-channel";
+      chEl.textContent = ch;
+    }
+  }
+
   function prependListCard(event) {
     const card = document.createElement("div");
     card.className = "event-card";
@@ -541,6 +556,7 @@
     const showingFull = envelopeMode === "full";
     const initialJson = showingFull ? fullJson : payloadJson;
 
+    // New card always shows the full channel name (it's at the top)
     card.innerHTML = `
       <div class="event-header">
         <span class="event-channel">${escapeHtml(event.channel)}</span>
@@ -580,6 +596,12 @@
     });
 
     eventLog.insertBefore(card, eventLog.firstChild);
+
+    // The card now below the new one: demote to muted if same channel, promote to bold if different
+    const cardBelow = card.nextElementSibling;
+    if (cardBelow && cardBelow.classList.contains("event-card")) {
+      setCardChannelStyle(cardBelow, cardBelow.dataset.channel === event.channel);
+    }
   }
 
   // ── Timeline view ─────────────────────────────────────────────────────────

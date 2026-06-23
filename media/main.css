@@ -264,6 +264,15 @@ select:disabled { opacity: 0.5; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.event-channel-repeat {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  opacity: 0.5;
+}
 .event-type-badge {
   font-size: 10px;
   padding: 1px 5px;
