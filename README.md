@@ -132,7 +132,7 @@ Click **Subscribe** — the status dot turns green and events start appearing.
 ## Views
 
 ### List view
-Each received event appears as a collapsible card showing channel, type badge, timestamp, and decoded payload. Use the **Payload / Full** toggle in the status bar to switch all cards between the payload fields only and the complete envelope.
+Each received event appears as a collapsible card showing channel, type badge, timestamp, and decoded payload. Use the **Payload / Full** toggle in the status bar to switch all cards between the payload fields only and the complete envelope. Consecutive events on the same channel are visually grouped — the channel name is shown in full on the first card and as a muted label on subsequent cards, reducing noise in high-volume streams.
 
 ### Timeline view
 Events are plotted as coloured dots on a horizontal time axis. Events that fall within 1.5% of each other on the track are clustered into a single dot with a count badge.

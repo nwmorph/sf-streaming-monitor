@@ -2,6 +2,13 @@
 
 All notable changes to SF Streaming Monitor are documented here.
 
+## [0.1.2] — 2026-06-23
+
+### Improved
+- List view: channel name is now de-duplicated across consecutive cards — the first card in a run shows the full bold channel name; subsequent cards on the same channel show a short muted label, making it easier to scan a high-volume stream without visual noise
+
+---
+
 ## [0.1.1] — 2026-06-23
 
 ### Fixed
