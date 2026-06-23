@@ -2,6 +2,14 @@
 
 All notable changes to SF Streaming Monitor are documented here.
 
+## [0.1.1] — 2026-06-23
+
+### Fixed
+- Org credentials now resolved correctly: the extension reads the decrypted access token by invoking `@salesforce/core` from the Salesforce CLI's own installation (`/usr/local/lib/sf/node_modules/@salesforce/core`), replacing a broken approach that attempted to bundle `@salesforce/core` as an external module (which VS Code's extension host could not resolve) and a subsequent attempt that mistakenly extracted the refresh token instead of the access token from the `sfdxAuthUrl` field
+- Removed `@salesforce/core` and `keytar` from the extension's own `package.json` dependencies and esbuild external list — the extension no longer ships or requires its own copy
+
+---
+
 ## [0.1.0] — 2026-06-06
 
 ### Added

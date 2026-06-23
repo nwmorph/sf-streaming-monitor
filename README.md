@@ -24,9 +24,7 @@ A Visual Studio Code extension for subscribing to — and publishing on — Sale
 
 ## Platform support
 
-> **macOS only.** The distributed `.vsix` is built on macOS and contains a native macOS binary (`keytar.node`) used for reading Salesforce CLI credentials. Installing this `.vsix` on Windows or Linux will cause authentication to fail silently.
->
-> Windows/Linux support is planned but requires a change to how credentials are read. If you need it, please [open an issue](https://github.com/nwmorph/sf-streaming-monitor/issues).
+> **macOS only (for now).** The extension reads Salesforce credentials by invoking `@salesforce/core` from the Salesforce CLI's installation at `/usr/local/lib/sf/`. This path is macOS-specific. Windows/Linux support is planned — if you need it, please [open an issue](https://github.com/nwmorph/sf-streaming-monitor/issues).
 
 ---
 
@@ -81,7 +79,11 @@ npx @vscode/vsce package --no-dependencies --skip-license
 If you haven't already, log in with the Salesforce CLI:
 
 ```bash
+# Production / Developer org
 sf org login web --alias myOrg
+
+# Sandbox
+sf org login web --alias myOrg --instance-url https://test.salesforce.com
 ```
 
 This stores credentials in `~/.sfdx/` where the extension can find them. You only need to do this once per org.
@@ -156,7 +158,7 @@ sf-streaming-monitor/
 │   ├── extension.ts          # Extension entry point, Output channel
 │   ├── streamingPanel.ts     # Webview panel, message routing
 │   ├── streamingClient.ts    # gRPC Pub/Sub client, publish, schema helpers
-│   └── orgManager.ts         # Org credential resolution via @salesforce/core
+│   └── orgManager.ts         # Org credential resolution via SF CLI's @salesforce/core
 ├── media/
 │   ├── main.js               # Webview UI logic
 │   └── main.css              # Webview styles (VS Code theme variables)
@@ -191,7 +193,7 @@ npx @vscode/vsce package --no-dependencies --skip-license
 # → sf-streaming-monitor-x.x.x.vsix (~220 KB)
 ```
 
-The `.vsix` contains the bundled extension and the `@salesforce/core` dependency. Recipients only need VS Code — no Node.js or npm required.
+The `.vsix` contains only the bundled extension. Recipients only need VS Code and the Salesforce CLI (`sf`) — no Node.js or npm required.
 
 ---
 

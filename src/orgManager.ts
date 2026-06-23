@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import { execFileSync } from "child_process";
 
 export interface OrgInfo {
   alias: string;
@@ -17,6 +18,8 @@ interface AliasFile {
 interface SfdxAuthFile {
   instanceUrl?: string;
   username?: string;
+  accessToken?: string;
+  orgId?: string;
 }
 
 const SFDX_DIR = path.join(os.homedir(), ".sfdx");
@@ -64,29 +67,48 @@ export function listOrgs(): Array<{ alias: string; username: string; instanceUrl
   return orgs;
 }
 
-// Use @salesforce/core to decrypt the access token — same mechanism the CLI uses
 export async function getOrgAccessInfo(username: string): Promise<OrgInfo> {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { AuthInfo } = require("@salesforce/core") as {
-    AuthInfo: {
-      create(opts: { username: string }): Promise<{
-        getFields(decrypt: boolean): {
-          username?: string;
-          accessToken?: string;
-          instanceUrl?: string;
-          alias?: string;
-        };
-      }>;
-    };
-  };
+  // Use @salesforce/core from the SF CLI's own installation to decrypt the token.
+  // The CLI ships its own copy at /usr/local/lib/sf/node_modules/@salesforce/core.
+  const script = `
+    const {AuthInfo} = require('/usr/local/lib/sf/node_modules/@salesforce/core');
+    AuthInfo.create({username: process.argv[1]})
+      .then(a => {
+        const f = a.getFields(true);
+        process.stdout.write(JSON.stringify({
+          accessToken: f.accessToken,
+          instanceUrl: f.instanceUrl,
+          orgId: f.orgId,
+          username: f.username,
+          alias: f.alias,
+        }));
+      })
+      .catch(e => { process.stderr.write(e.message); process.exit(1); });
+  `;
 
-  const authInfo = await AuthInfo.create({ username });
-  const fields = authInfo.getFields(true); // true = decrypt
+  let raw: string;
+  try {
+    raw = execFileSync("node", ["-e", script, username], {
+      encoding: "utf-8",
+      timeout: 15000,
+    });
+  } catch (e: unknown) {
+    throw new Error(`Could not retrieve credentials for ${username}: ${String(e)}`);
+  }
+
+  const fields = JSON.parse(raw) as {
+    accessToken?: string;
+    instanceUrl?: string;
+    orgId?: string;
+    username?: string;
+    alias?: string;
+  };
 
   if (!fields.accessToken || !fields.instanceUrl) {
     throw new Error(`Could not retrieve credentials for ${username}`);
   }
 
+  const resolvedUsername = fields.username ?? username;
   const aliasMap = getAliasMap();
   const usernameToAlias: Record<string, string> = {};
   for (const [alias, u] of Object.entries(aliasMap)) {
@@ -94,11 +116,11 @@ export async function getOrgAccessInfo(username: string): Promise<OrgInfo> {
   }
 
   return {
-    alias: usernameToAlias[username] ?? username,
-    username,
+    alias: fields.alias ?? usernameToAlias[resolvedUsername] ?? resolvedUsername,
+    username: resolvedUsername,
     instanceUrl: fields.instanceUrl,
     accessToken: fields.accessToken,
-    orgId: (fields as Record<string, unknown>)["orgId"] as string ?? "",
+    orgId: fields.orgId ?? "",
   };
 }
 

@@ -2,7 +2,7 @@
   "name": "sf-streaming-monitor",
   "displayName": "SF Streaming Monitor",
   "description": "Subscribe to and publish on streaming API channels — Platform Events, Change Data Capture, and Generic Streaming — directly from VS Code. Built on the Pub/Sub gRPC API.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "nwmorph",
   "author": {
     "name": "Niklas Waller",
@@ -69,7 +69,5 @@
     "esbuild": "^0.28.1",
     "typescript": "^5.3.0"
   },
-  "dependencies": {
-    "@salesforce/core": "^8.31.0"
-  }
+  "dependencies": {}
 }
